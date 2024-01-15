@@ -9,3 +9,5 @@ bin/
 lib/
 ./github/**
 .vscode/
+.idea/
+cmake-build-debug
