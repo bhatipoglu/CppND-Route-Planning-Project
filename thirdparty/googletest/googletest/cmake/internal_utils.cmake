@@ -227,8 +227,10 @@ function(cxx_executable name dir libs)
     ${name} "${cxx_default}" "${libs}" "${dir}/${name}.cc" ${ARGN})
 endfunction()
 
-# Sets PYTHONINTERP_FOUND and PYTHON_EXECUTABLE.
-find_package(PythonInterp)
+# Set the CMake policy CMP0148 to NEW. This policy determines the behavior of the FindPythonInterp and FindPythonLibs modules.
+# As of CMake 3.12, these modules are deprecated and completely removed in CMake 3.19. Setting this policy to NEW means we are
+# acknowledging and preparing for this change.
+cmake_policy(SET CMP0148 NEW)
 
 # cxx_test_with_flags(name cxx_flags libs srcs...)
 #
