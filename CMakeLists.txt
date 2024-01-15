@@ -20,6 +20,10 @@ find_package(GraphicsMagick)
 set(IO2D_WITHOUT_SAMPLES 1)
 set(IO2D_WITHOUT_TESTS 1)
 
+# Find and include X11
+find_package(X11 REQUIRED)
+include_directories(${X11_INCLUDE_DIR})
+
 # Add the pugixml and GoogleTest library subdirectories
 add_subdirectory(thirdparty/pugixml)
 add_subdirectory(thirdparty/googletest)
