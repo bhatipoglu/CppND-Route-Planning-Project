@@ -1,6 +1,16 @@
 #include "route_model.h"
 #include <iostream>
 
+
+/**
+ * @brief Constructor for the RouteModel class.
+ * 
+ * This constructor initializes a RouteModel object using the provided XML data.
+ * It creates RouteModel nodes based on the Model nodes and populates the m_Nodes vector.
+ * It also calls the CreateNodeToRoadHashmap function to create a hashmap for efficient lookup of roads connected to each node.
+ * 
+ * @param xml The XML data used to initialize the RouteModel.
+ */
 RouteModel::RouteModel(const std::vector<std::byte> &xml) : Model(xml) {
     // Create RouteModel nodes.
     int counter = 0;
@@ -12,6 +22,12 @@ RouteModel::RouteModel(const std::vector<std::byte> &xml) : Model(xml) {
 }
 
 
+/**
+ * @brief Creates a hashmap that maps each node to the closest road in the model.
+ * 
+ * This function creates a hashmap that associates each node in the model with the closest road. 
+ * The hashmap is used to efficiently find the closest road to a given node during the A* search algorithm.
+ */
 void RouteModel::CreateNodeToRoadHashmap() {
     for (const Model::Road &road : Roads()) {
         if (road.type != Model::Road::Type::Footway) {
@@ -26,6 +42,12 @@ void RouteModel::CreateNodeToRoadHashmap() {
 }
 
 
+/**
+ * Finds a neighbor node based on the given node indices.
+ * 
+ * @param node_indices A vector of node indices to search for neighbors.
+ * @return A pointer to the neighbor node if found, nullptr otherwise.
+ */
 RouteModel::Node *RouteModel::Node::FindNeighbor(std::vector<int> node_indices) {
     Node *closest_node = nullptr;
     Node node;
@@ -42,6 +64,14 @@ RouteModel::Node *RouteModel::Node::FindNeighbor(std::vector<int> node_indices) 
 }
 
 
+/**
+ * @brief Finds the neighboring nodes of the current node.
+ * 
+ * This function is used to find the neighboring nodes of the current node in the RouteModel.
+ * Neighboring nodes are the nodes that are connected to the current node through edges.
+ * 
+ * @return void
+ */
 void RouteModel::Node::FindNeighbors() {
     for (auto & road : parent_model->node_to_road[this->index]) {
         RouteModel::Node *new_neighbor = this->FindNeighbor(parent_model->Ways()[road->way].nodes);
@@ -52,6 +82,13 @@ void RouteModel::Node::FindNeighbors() {
 }
 
 
+/**
+ * Finds the closest node in the RouteModel to the given coordinates (x, y).
+ * 
+ * @param x The x-coordinate of the point.
+ * @param y The y-coordinate of the point.
+ * @return A reference to the closest node in the RouteModel.
+ */
 RouteModel::Node &RouteModel::FindClosestNode(float x, float y) {
     Node input;
     input.x = x;
