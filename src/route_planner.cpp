@@ -88,18 +88,30 @@ RouteModel::Node *RoutePlanner::NextNode() {
 // - The returned vector should be in the correct order: the start node should be the first element
 //   of the vector, the end node should be the last element.
 
+    // TODO: Implement your solution here.
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
+    // For each node in the chain, add the distance from the node to its parent to the distance variable
+    while(current_node != start_node) {
+        path_found.push_back(*current_node);
+        distance += current_node->distance(*(current_node->parent));
+        current_node = current_node->parent;
+    }
 
-    // TODO: Implement your solution here.
+    // Add the start node to the path_found vector
+    path_found.push_back(*start_node);
 
-    distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
+    // Reverse the path_found vector
+    std::reverse(path_found.begin(), path_found.end());
+
+    // Multiply the distance by the scale of the map to get meters
+    distance *= m_Model.MetricScale();
+
+    // Return the path_found vector
     return path_found;
-
 }
-
 
 // TODO 7: Write the A* Search algorithm here.
 // Tips:
@@ -111,6 +123,24 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
-    // TODO: Implement your solution here.
+    // Set the start node's visited attribute to true
+    start_node->visited = true;
 
+    // Add the start node to the open_list
+    open_list.push_back(start_node);
+
+    while (!open_list.empty()) {
+        // Get the next node from the open_list
+        current_node = NextNode();
+
+        // Check if the current node is the end node
+        if (current_node == end_node) {
+            // Construct the final path
+            m_Model.path = ConstructFinalPath(current_node);
+            return;
+        }
+
+        // Add all of the neighbors of the current node to the open_list
+        AddNeighbors(current_node);
+    }
 }
