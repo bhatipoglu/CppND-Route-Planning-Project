@@ -34,7 +34,25 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 // - For each node in current_node.neighbors, add the neighbor to open_list and set the node's visited attribute to true.
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
+    // Populate neighbors vector for the current node
+    current_node->FindNeighbors();
 
+    for(auto neighbor : current_node->neighbors) {
+        // Set the parent node
+        neighbor->parent = current_node;
+
+        // Set the h_value using CalculateHValue method
+        neighbor->h_value = CalculateHValue(neighbor);
+
+        // Set the g_value to be the g_value of the current node plus the distance from the current node to the neighbor
+        neighbor->g_value = current_node->g_value + current_node->distance(*neighbor);
+
+        // Add the neighbor to open_list
+        open_list.push_back(neighbor);
+
+        // Set the node's visited attribute to true
+        neighbor->visited = true;
+    }
 }
 
 
@@ -46,7 +64,19 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Return the pointer.
 
 RouteModel::Node *RoutePlanner::NextNode() {
+    // Sort the open_list according to the sum of the h value and g value
+    std::sort(open_list.begin(), open_list.end(), [](const auto &a, const auto &b) {
+        return (a->h_value + a->g_value) < (b->h_value + b->g_value);
+    });
 
+    // Create a pointer to the node in the list with the lowest sum
+    RouteModel::Node *lowest_sum_node = open_list.front();
+
+    // Remove that node from the open_list
+    open_list.erase(open_list.begin());
+
+    // Return the pointer
+    return lowest_sum_node;
 }
 
 
