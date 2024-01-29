@@ -4,15 +4,6 @@
 /**
  * @brief Constructs a RoutePlanner object.
  * 
- * @param model The RouteModel object representing the map.
- * @param start_x The x-coordinate of the starting point.
- * @param start_y The y-coordinate of the starting point.
- * @param end_x The x-coordinate of the ending point.
- * @param end_y The y-coordinate of the ending point.
- */
-/**
- * @brief Constructs a RoutePlanner object.
- * 
  * This constructor initializes a RoutePlanner object with the given parameters.
  * It converts the input coordinates to percentages and uses the m_Model.FindClosestNode method
  * to find the closest nodes to the starting and ending coordinates. The found nodes are stored
