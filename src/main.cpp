@@ -27,6 +27,13 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+/**
+ * @brief The main function of the program.
+ * 
+ * This function is the entry point of the program. It reads the command line arguments, 
+ * loads OpenStreetMap data, prompts the user for start and end coordinates, builds a route model, 
+ * performs A* search, and displays the distance and the rendered results of the search.
+ */
 int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
@@ -52,9 +59,6 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
     
-    // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
-    // user input for these values using std::cin. Pass the user input to the
-    // RoutePlanner object below in place of 10, 10, 90, 90.
     float start_x, start_y, end_x, end_y;
     std::cout << "Please Enter start_x: "; std::cin >> start_x;
     std::cout << "Please Enter start_y: "; std::cin >> start_y;
