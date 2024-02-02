@@ -7,6 +7,12 @@
 #include "../src/route_planner.h"
 
 
+/**
+ * Reads the contents of a file at the specified path and returns it as an optional vector of bytes.
+ *
+ * @param path The path to the file.
+ * @return An optional vector of bytes containing the contents of the file, or std::nullopt if the file cannot be read.
+ */
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};
@@ -24,6 +30,12 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+/**
+ * @brief Reads OSM data from a file and returns it as a vector of bytes.
+ * 
+ * @param path The path to the OSM data file.
+ * @return std::vector<std::byte> The OSM data as a vector of bytes.
+ */
 std::vector<std::byte> ReadOSMData(const std::string &path) {
     std::vector<std::byte> osm_data;
     auto data = ReadFile(path);
@@ -39,6 +51,12 @@ std::vector<std::byte> ReadOSMData(const std::string &path) {
 //   Beginning RoutePlanner Tests.
 //--------------------------------//
 
+/**
+ * @brief Unit test class for the RoutePlanner class.
+ * 
+ * This class is used to perform unit tests on the RoutePlanner class.
+ * It sets up the necessary data and objects for testing.
+ */
 class RoutePlannerTest : public ::testing::Test {
   protected:
     std::string osm_data_file = "../map.osm";
