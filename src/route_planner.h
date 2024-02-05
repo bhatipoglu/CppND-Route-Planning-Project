@@ -23,7 +23,7 @@ public:
   float GetDistance() const { return distance; }
   void AStarSearch();
 
-  // The following methods have been made public so we can test them individually.
+  // The following methods have been made public, so we can test them individually.
   void AddNeighbors(RouteModel::Node *current_node);
   float CalculateHValue(RouteModel::Node const *node);
   std::vector<RouteModel::Node> ConstructFinalPath(RouteModel::Node *);
