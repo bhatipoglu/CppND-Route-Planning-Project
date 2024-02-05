@@ -3,19 +3,20 @@
 
 /**
  * @brief Constructs a RoutePlanner object.
- * 
+ *
  * This constructor initializes a RoutePlanner object with the given parameters.
  * It converts the input coordinates to percentages and uses the m_Model.FindClosestNode method
  * to find the closest nodes to the starting and ending coordinates. The found nodes are stored
  * in the RoutePlanner's start_node and end_node attributes.
- * 
+ *
  * @param model The RouteModel object.
  * @param start_x The x-coordinate of the starting point.
  * @param start_y The y-coordinate of the starting point.
  * @param end_x The x-coordinate of the ending point.
  * @param end_y The y-coordinate of the ending point.
  */
-RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
+RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y) : m_Model(model)
+{
     // Convert inputs to percentage:
     start_x *= 0.01;
     start_y *= 0.01;
@@ -33,21 +34,23 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
  * @param node A pointer to the node for which the H value needs to be calculated.
  * @return The calculated H value.
  */
-float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
+float RoutePlanner::CalculateHValue(RouteModel::Node const *node)
+{
     return node->distance(*end_node);
 }
 
-
 /**
  * Adds neighboring nodes to the open list and updates their attributes.
- * 
+ *
  * @param current_node A pointer to the current node.
  */
-void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
+void RoutePlanner::AddNeighbors(RouteModel::Node *current_node)
+{
     // Populate neighbors vector for the current node
     current_node->FindNeighbors();
 
-    for(auto neighbor : current_node->neighbors) {
+    for (auto neighbor : current_node->neighbors)
+    {
         // Set the parent node
         neighbor->parent = current_node;
 
@@ -65,19 +68,18 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
     }
 }
 
-
 /**
  * @brief Returns the next node in the route.
- * 
+ *
  * This function is used to retrieve the next node in the route that needs to be visited.
- * 
+ *
  * @return A pointer to the next node in the route.
  */
-RouteModel::Node *RoutePlanner::NextNode() {
+RouteModel::Node *RoutePlanner::NextNode()
+{
     // Sort the open_list according to the sum of the h value and g value
-    std::sort(open_list.begin(), open_list.end(), [](const auto &a, const auto &b) {
-        return (a->h_value + a->g_value) < (b->h_value + b->g_value);
-    });
+    std::sort(open_list.begin(), open_list.end(), [](const auto &a, const auto &b)
+              { return (a->h_value + a->g_value) < (b->h_value + b->g_value); });
 
     // Create a pointer to the node in the list with the lowest sum
     RouteModel::Node *lowest_sum_node = open_list.front();
@@ -91,16 +93,18 @@ RouteModel::Node *RoutePlanner::NextNode() {
 
 /**
  * @brief Represents a vector of RouteModel::Node objects.
- * 
+ *
  * This vector is used to store the nodes that make up the final path in the route planner.
  * Each element in the vector represents a node in the path.
  */
-std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
+std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node)
+{
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
     // For each node in the chain, add the distance from the node to its parent to the distance variable
-    while(current_node != start_node) {
+    while (current_node != start_node)
+    {
         path_found.push_back(*current_node);
         distance += current_node->distance(*(current_node->parent));
         current_node = current_node->parent;
@@ -122,7 +126,8 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 /**
  * Performs the A* search algorithm to find the shortest path from the start node to the end node.
  */
-void RoutePlanner::AStarSearch() {
+void RoutePlanner::AStarSearch()
+{
     RouteModel::Node *current_node = nullptr;
 
     // Set the start node's visited attribute to true
@@ -131,12 +136,14 @@ void RoutePlanner::AStarSearch() {
     // Add the start node to the open_list
     open_list.push_back(start_node);
 
-    while (!open_list.empty()) {
+    while (!open_list.empty())
+    {
         // Get the next node from the open_list
         current_node = NextNode();
 
         // Check if the current node is the end node
-        if (current_node == end_node) {
+        if (current_node == end_node)
+        {
             // Construct the final path
             m_Model.path = ConstructFinalPath(current_node);
             return;
