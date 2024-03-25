@@ -11,3 +11,5 @@ lib/
 .vscode/
 .idea/
 cmake-build-debug
+*docker-compose.yml
+*dockerfile
